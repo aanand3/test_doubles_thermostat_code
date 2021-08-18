@@ -7,15 +7,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static smarthome.Mode.*;
-
 public class HttpModeSwitch implements ModeSwitch {
     private HttpClient httpClient;
     private URL url;
 
-    public HttpModeSwitch(URL url) {
+    public HttpModeSwitch(URL url, HttpClient httpClient) {
         this.url = url;
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = httpClient;
     }
 
     public Mode currentMode() {
@@ -30,10 +28,6 @@ public class HttpModeSwitch implements ModeSwitch {
             e.printStackTrace();
         }
 
-        return switch (String.valueOf(response.body())) {
-            case "HEAT" -> HEAT;
-            case "COOL" -> COOL;
-            default -> OFF;
-        };
+        return Mode.valueOf(String.valueOf(response.body()));
     }
 }
